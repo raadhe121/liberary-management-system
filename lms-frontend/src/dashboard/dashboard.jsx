@@ -48,7 +48,7 @@ function Dashboard() {
         </nav>
       </aside>
       <main className="main-content-area">
-        {currentTab == 'dashboard'&&<div className="top-cards">
+        {currentTab == 'dashboard' && <div className="top-cards">
           <div className="card money-card">
             <h3>Today's Money</h3>
             <div className="card-value">
