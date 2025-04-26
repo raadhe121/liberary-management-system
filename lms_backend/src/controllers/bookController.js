@@ -39,3 +39,11 @@ export const addBook = async (req, res) => {
         });
     }
 }
+
+export const getBook = async(req,res)=>{
+    try{
+
+    }catch(e){
+        
+    }
+}
