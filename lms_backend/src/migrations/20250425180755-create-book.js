@@ -15,6 +15,9 @@ module.exports = {
       author: {
         type: Sequelize.STRING
       },
+      bookStatus: {
+        type: Sequelize.STRING
+      },
       status: {
         type: Sequelize.STRING
       },
