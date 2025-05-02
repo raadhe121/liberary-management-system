@@ -1,6 +1,10 @@
-import logo from './logo.svg';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    useNavigate,
+} from 'react-router-dom';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../src/auth/loginPage';
 import Dashboard from '../src/dashboard/dashboard.jsx'
 function App() {

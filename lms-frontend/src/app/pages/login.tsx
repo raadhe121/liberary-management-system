@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
-import '../App.css';
-import type { AppDispatch } from './app/store';
-import { userLogin } from '../redux/slice/authSlice/userLogin';
+import React, { use, useState } from 'react';
+import "../styles/app.css"
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../redux/slice/authSlice';
+import { AppDispatch } from '../redux/store/configureStore';
+import { useNavigate } from 'react-router-dom';
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  
   const handleLogin = () => {
     // navigate('/dashboard');
-    dispatch(userLogin());
+    dispatch(loginUser({ email, password,navigate }));
   };
 
   return (

@@ -5,12 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import LoginPage from './auth/loginPage';
 import Dashboard from './dashboard/dashboard';
+import { Provider } from 'react-redux';
+import {store} from '../src/redux/store.jsx'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode >
+   <Provider store={store}>
+     <React.StrictMode >
     <App />
     </React.StrictMode>
+   </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
