@@ -32,7 +32,7 @@ export const createUser = async (req, res) => {
         }
         else {
             const hashedPassword = await hashPassword(password)
-            const roleId = role == 'Staff' ? 2 : 3
+            const roleId = role == 'staff' ? 2 : 3
             const user = await User.create({
                 roleId: roleId,
                 name,

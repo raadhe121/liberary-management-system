@@ -1,11 +1,12 @@
 import React, { use, useEffect, useState } from 'react';
 import "../../styles/dashboard.css";
 import BookList from '../../components/bookList';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/slice/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMyProfile, logout } from '../../redux/slice/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from 'src/app/redux/store/configureStore';
+import { AppDispatch } from '../../redux/store/configureStore';
 import BookCard from '../../components/bookCard';
+import { RootState } from 'src/app/redux/slice';
 
 
 function Dashboard() {
@@ -13,6 +14,8 @@ function Dashboard() {
   const [token, setToken] = useState('')
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const { myProfile } = useSelector((state: RootState) => state.authReducer)
+
 
   const getToken = async () => {
     const token = await localStorage.getItem('token');
@@ -20,6 +23,14 @@ function Dashboard() {
   }
 
   useEffect(() => {
+    if (token != '') {
+      dispatch(getMyProfile())
+    }
+  }, [token, dispatch])
+
+  useEffect(() => {
+    console.log("this is my profile", myProfile?.name);
+
     getToken()
   }, [token])
   const books = [
@@ -69,7 +80,9 @@ function Dashboard() {
     <div className="dashboard-layout">
       <aside className="side-menu">
         <div className="logo-section">
+          <h5>{ token != '' ? myProfile?.name:"Hello User!"}</h5>
           <h3>LMS</h3>
+
         </div>
         <nav className="navigation">
           <ul>
@@ -77,34 +90,34 @@ function Dashboard() {
               <i className="icon dashboard-icon"></i>
               <span>Dashboard</span>
             </li>
-            <li className={currentTab == 'students' ? "active" : ''} onClick={() => setCurrentTab('students')}>
+            {token != '' && myProfile?.roleId != 3 && <li className={currentTab == 'students' ? "active" : ''} onClick={() => setCurrentTab('students')}>
               <i className="icon tables-icon"></i>
               <span>Students</span>
-            </li>
+            </li>}
             <li className={currentTab == 'books' ? "active" : ''} onClick={() => setCurrentTab('books')}>
               <i className="icon billing-icon"></i>
               <span>Books</span>
             </li>
-            <li className={currentTab == 'issuedBooks' ? "active" : ''} onClick={() => setCurrentTab('issuedBooks')}>
+            {token != '' && <li className={currentTab == 'issuedBooks' ? "active" : ''} onClick={() => setCurrentTab('issuedBooks')}>
               <i className="icon rtl-icon"></i>
               <span>Issued Books</span>
-            </li>
-            <li className={currentTab == 'returedBooks' ? "active" : ''} onClick={() => setCurrentTab('returedBooks')}>
+            </li>}
+            {token != '' && <li className={currentTab == 'returedBooks' ? "active" : ''} onClick={() => setCurrentTab('returedBooks')}>
               <i className="icon rtl-icon"></i>
               <span>Retured Books</span>
-            </li>
+            </li>}
             {token != "" && <li className="menu-header">ACCOUNT PAGES</li>}
             {token != "" && <li>
               <i className="icon profile-icon"></i>
               <span>Profile</span>
             </li>}
-            {token == ""&&<li onClick={()=>{
-              navigate('/login',{replace:true})
+            {token == "" && <li onClick={() => {
+              navigate('/login', { replace: true })
             }}>
               <i className="icon sign-in-icon"></i>
               <span>Sign In</span>
             </li>}
-            
+
             {token != "" && <li onClick={() => {
               dispatch(logout({ navigate }))
             }}>
@@ -118,27 +131,33 @@ function Dashboard() {
         {currentTab == 'dashboard' &&
           <><div className="top-cards">
             <div className="card money-card">
-              <h3>Today's Money</h3>
+              <h3>Total Books</h3>
               <div className="card-value">
                 $53,000 <span className="positive">+55%</span>
               </div>
             </div>
-            <div className="card users-card">
-              <h3>Today's Users</h3>
+            {myProfile?.roleId != 3&&<div className="card users-card">
+              <h3>Total Students</h3>
               <div className="card-value">
                 2,300 <span className="negative">-3%</span>
               </div>
-            </div>
+            </div>}
 
           </div>
 
-          <h2>Recent Added Books</h2>
-          {books.map((book) => (
-        <BookCard key={book.id} book={book} />
-      ))}
+            <h2>Recent Added Books</h2>
+            {books.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
           </>
         }
         {currentTab == 'books' &&
+          <BookList />
+        }
+        {currentTab == 'issuedBooks' &&
+          <BookList />
+        }
+        {currentTab == 'returedBooks' &&
           <BookList />
         }
       </main>
