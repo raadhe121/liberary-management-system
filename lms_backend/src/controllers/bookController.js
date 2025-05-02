@@ -1,10 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv'
-import { validateRequiredFields } from "../validators.js";
-import UserBook from "../models/userbook.js";
-import User from "../models/userModel.js";
 import Book from "../models/book.js";
+import { validateRequiredFields } from "../validators.js";
 dotenv.config()
 
 
@@ -23,8 +21,7 @@ export const addBook = async (req, res) => {
             const book = await Book.create({
                 name,
                 author,
-                status: 'active',
-                bookStatus: 'free'
+                status: 'active'
             })
             return res.status(200).json({
                 status: 200,
@@ -35,109 +32,10 @@ export const addBook = async (req, res) => {
 
     }
     catch (e) {
-        console.log("thisisi", e);
-
         return res.status(401).json({
             status: 401,
             message: "Internal Server Error",
             user: {},
-        });
-    }
-}
-
-export const getAllBook = async (req, res) => {
-    try {
-        const books = await Book.findAll({ where: { status: 'active', bookStatus: 'free' }, raw: true })
-        res.status(200).json({
-            status: 200,
-            message: "All book found successfully.",
-            user: books,
-        });
-    } catch (e) {
-        return res.status(500).json({
-            status: 500,
-            message: "Internal Server Error",
-            user: {},
-        });
-    }
-}
-
-export const getUsersBook = async (req, res) => {
-    try {
-
-        const userBooks = await UserBook.findAll({
-            where: { userId: req.user.id }
-        });
-
-        const bookIds = userBooks.map(ub => ub.bookId);
-        const books = await Book.findAll({ where: { id: bookIds } });
-
-        const userIds = userBooks.map(ub => ub.userId);
-        const users = await User.findAll({ where: { id: userIds }, attributes: { exclude: ['password'] } });
-
-        const data = userBooks.map(userBook => {
-            const book = books.find(b => b.id === userBook.bookId);
-            const user = users.find(u => u.id === userBook.userId);
-            return { ...userBook.dataValues, Book: book, User: user };
-        });
-
-        return res.status(200).json({
-            status: 200,
-            message: "Book Found Successfully.",
-            data: data,
-        });
-    } catch (e) {
-        console.log("this is", e);
-
-    }
-}
-
-export const issueBook = async (req, res) => {
-    try {
-
-        const book = await Book.findOne({ where: { id: req.body.bookId } })
-        const userBook = await UserBook.findOne({ where: { bookId: req.body.bookId } })
-        if (!req.body.bookId) {
-            return res.status(401).json({
-                status: 401,
-                message: "Book Id is required.",
-                data: {},
-            });
-        }
-        if (!book) {
-            return res.status(401).json({
-                status: 401,
-                message: "Book not found.",
-                data: {},
-            });
-        }
-
-        else if (userBook) {
-            return res.status(401).json({
-                status: 401,
-                message: "Book already issued.",
-                data: {},
-            });
-        }
-        else {
-
-            await UserBook.create({
-                userId: req.user.id,
-                bookId: Number(req.body.bookId)
-            })
-            return res.status(200).json({
-                status: 200,
-                message: "Book Issued Successfully.",
-                data: {},
-            });
-        }
-    } catch (e) {
-        console.log("this is", e);
-
-        return res.status(500).json({
-            status: 500,
-            message: "Internal Server Error.",
-            data: {},
         });
     }
 }

@@ -5,7 +5,6 @@ import { validateRequiredFields } from "../validators.js";
 import { hashPassword } from "../encryption.js";
 import role from "../models/role.js";
 import dotenv from 'dotenv'
-import { error } from "firebase-functions/logger";
 dotenv.config()
 
 
@@ -83,59 +82,10 @@ export const loginUser = async (req, res) => {
         return res.status(200).json({
             status: 200,
             message: "User Login successfully",
-            data: users
+            user: users
         })
     } catch (e) {
         console.log("user", e);
         return res.status(500).json({ status: 404, error: "Internal Server Error" });
-    }
-}
-
-export const logoutUser = async (req, res) => {
-    try {
-        const token = req.header('Authorization')?.split(' ')[1];
-        
-        if (!token) {
-            return res.status(401).json({
-                status: 401,
-                message: 'Token not provided',
-                user: {},
-            });
-        }
-        else {
-            return res.status(200).json({
-                status: 200,
-                message: 'Logged out successfully',
-                user: {},
-            });
-        }
-    } catch (e) {
-
-    }
-}
-
-export const myProfile = async (req, res) => {
-    try {
-        console.log("this is id", req.user.id);
-
-        const user = await User.findOne({ where: { id: req.user.id }, raw: true })
-        const useRole = await role.findOne({ where: { id: user.roleId }, raw: true })
-        const users = {
-            ...user,
-            role: useRole
-        }
-        return res.status(200).json({
-            status: 200,
-            message: "Profile found successfully.",
-            data: users
-        })
-    }
-    catch (e) {
-        return res.status(500).json({
-            status: 500,
-            message: "Internal Server Error",
-            data: {},
-            error: e
-        })
     }
 }
