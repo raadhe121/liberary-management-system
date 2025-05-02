@@ -1,0 +1,106 @@
+.book-list-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 10px;
+}
+
+.book-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto; /* Added space for actions */
+    align-items: center;
+    width: 96%;
+    min-height: 60px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: rgba(36, 59, 85, 0.8); /* Dark background with slight transparency */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Darker shadow */
+    color: #e0f2f7; /* Light text color */
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+}
+
+.book-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.book-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    margin-right: 15px;
+    object-fit: cover;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow on cover */
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1; /* Allow details to take up remaining space */
+}
+
+.book-title {
+    font-weight: 500; /* Slightly less bold */
+    color: #fff;
+}
+
+.book-author {
+    font-size: 0.9em;
+    color: #90caf9; /* Light blue for author */
+}
+
+.book-availability {
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-left: 15px; /* Add some space between details and availability */
+}
+
+.available {
+    background-color: rgba(139, 195, 74, 0.2); /* Light green with transparency */
+    color: #8bc34a; /* Green */
+    border: 1px solid rgba(139, 195, 74, 0.5);
+}
+
+.unavailable {
+    background-color: rgba(244, 67, 54, 0.2); /* Light red with transparency */
+    color: #f44336; /* Red */
+    border: 1px solid rgba(244, 67, 54, 0.5);
+}
+
+.book-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 15px; /* Add some space between availability and actions */
+}
+
+.issue-button,
+.return-button {
+    background-color: #4caf50; /* Green for issue */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.85em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.return-button {
+    background-color: #f44336; /* Red for return */
+}
+
+.issue-button:hover {
+    background-color: #45a049;
+}
+
+.return-button:hover {
+    background-color: #d32f2f;
+}
