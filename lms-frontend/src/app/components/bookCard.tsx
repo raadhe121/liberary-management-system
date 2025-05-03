@@ -41,28 +41,36 @@ const BookCard: React.FC<BookCardProps> = ({ book, onEdit, onDelete }) => {
   }, []);
 
   const handleIssue = () => {
-    swal({
-      title: "Are you sure?",
-      text: `Do you want to issue "${book.name}"?`,
-      icon: "warning",
-      buttons: ["Cancel", "Yes, issue it!"],
-      dangerMode: true,
-    }).then((confirm) => {
-      if (confirm) {
-        dispatch(issueBook(book.id))
-          .then((response: any) => {
-            swal("Success!", response?.payload?.message || "Book issued successfully", "success");
-            dispatch(getAllIssuedBookList());
-            dispatch(getAllBookList());
-          })
-          .catch(() => {
-            swal("Error", "Failed to issue book", "error");
-          });
-      }
-    });
+    if(!token){
+      navigate('/login')
+    }else{
+      swal({
+        title: "Are you sure?",
+        text: `Do you want to issue "${book.name}"?`,
+        icon: "warning",
+        buttons: ["Cancel", "Yes, issue it!"],
+        dangerMode: true,
+      }).then((confirm) => {
+        if (confirm) {
+          dispatch(issueBook(book.id))
+            .then((response: any) => {
+              swal("Success!", response?.payload?.message || "Book issued successfully", "success");
+              dispatch(getAllIssuedBookList());
+              dispatch(getAllBookList());
+            })
+            .catch(() => {
+              swal("Error", "Failed to issue book", "error");
+            });
+        }
+      });
+    }
+    
   };
 
   const handleReturn = () => {
+   if(!token){
+    navigate('/login')
+  }else{
     swal({
       title: "Are you sure?",
       text: `Do you want to return "${book.name}"?`,
@@ -78,16 +86,17 @@ const BookCard: React.FC<BookCardProps> = ({ book, onEdit, onDelete }) => {
         });
       }
     });
+   }
   };
 
-  if (!token) {
-    return (
-      <div className="book-card">
-        <p>You must be logged in to issue or return books.</p>
-        <button onClick={() => navigate('/login')}>Login</button>
-      </div>
-    );
-  }
+  // if (!token) {
+  //   return (
+  //     <div className="book-card">
+  //       <p>You must be logged in to issue or return books.</p>
+  //       <button onClick={() => navigate('/login')}>Login</button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="book-card">
