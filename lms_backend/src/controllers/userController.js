@@ -11,6 +11,7 @@ dotenv.config()
 
 
 export const createUser = async (req, res) => {
+    
     try {
         const { name, email, password, number, role } = req.body;
         let validateMessage = validateRequiredFields(req.body)
@@ -49,12 +50,12 @@ export const createUser = async (req, res) => {
         }
     }
     catch (e) {
+        console.log(e);
         return res.status(500).json({
             status: 500,
             message: "Internal Server Error",
             user: {},
         });
-        console.log(e);
 
     }
 }
@@ -73,7 +74,7 @@ export const loginUser = async (req, res) => {
         }
         delete user.password;
         const userRoleData = await role.findOne({ where: { id: user.roleId } })
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "12h" });
         const users = {
             ...user,
             token: token,
@@ -116,8 +117,6 @@ export const logoutUser = async (req, res) => {
 
 export const myProfile = async (req, res) => {
     try {
-        console.log("this is id", req.user.id);
-
         const user = await User.findOne({ where: { id: req.user.id }, raw: true })
         const useRole = await role.findOne({ where: { id: user.roleId }, raw: true })
         const users = {
@@ -137,5 +136,96 @@ export const myProfile = async (req, res) => {
             data: {},
             error: e
         })
+    }
+}
+
+export const getAllStudents = async (req, res) => {
+    try {
+
+        const user = await User.findAll({ where: { roleId: 3 }, raw: true })
+        return res.status(200).json({
+            status: 200,
+            message: "Students found successfully.",
+            data: user
+        })
+    }
+    catch (e) {
+        return res.status(500).json({
+            status: 500,
+            message: "Internal Server Error",
+            data: {},
+            error: e
+        })
+    }
+}
+
+export const updateUser = async (req, res) => {
+    try {
+        const {id, name, email, number } = req.body
+        let validateMessage = validateRequiredFields(req.body)
+        if (validateMessage) {
+            return res.status(401).json({
+                status: 401,
+                message: validateMessage,
+                user: {},
+            });
+        } else {
+            await User.update({
+                name,
+                email,
+                number
+            },{
+                where: { id: id }
+            })
+            return res.status(200).json({
+                status: 200,
+                message: "User updated Successfully.",
+                data: {},
+            });
+        }
+
+    }
+    catch (e) {
+        console.log("thisisi", e);
+
+        return res.status(401).json({
+            status: 401,
+            message: "Internal Server Error",
+            user: {},
+        });
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    try {
+        const {id} = req.body
+        
+        let validateMessage = validateRequiredFields(id)
+        if (validateMessage) {
+            return res.status(401).json({
+                status: 401,
+                message: validateMessage,
+                user: {},
+            });
+        } else {
+            await User.destroy({
+                where: { id: id }
+            })
+            return res.status(200).json({
+                status: 200,
+                message: "User deleted Successfully.",
+                data: {},
+            });
+        }
+
+    }
+    catch (e) {
+        console.log("thisisi", e);
+
+        return res.status(401).json({
+            status: 401,
+            message: "Internal Server Error",
+            user: {},
+        });
     }
 }

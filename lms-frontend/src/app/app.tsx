@@ -26,7 +26,7 @@ export function App() {
           } />
 
         <Route path="/login" element={
-          isAuthenticated() ? <Navigate to="/dashboard" replace /> : <LoginPage />
+          <LoginPage />
         } />
 
       </Routes>
