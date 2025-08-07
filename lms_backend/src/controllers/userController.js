@@ -16,6 +16,8 @@ export const createUser = async (req, res) => {
         const { name, email, password, number, role } = req.body;
         let validateMessage = validateRequiredFields(req.body)
         const isEmailExists = await User.findOne({ where: { email: email }, raw: true })
+            console.log(password);
+
         if (validateMessage) {
             return res.status(401).json({
                 status: 401,
@@ -33,6 +35,7 @@ export const createUser = async (req, res) => {
         }
         else {
             const hashedPassword = await hashPassword(password)
+            
             const roleId = role == 'staff' ? 2 : 3
             const user = await User.create({
                 roleId: roleId,

@@ -17,9 +17,7 @@ interface BookFormModalProps {
 const BookFormModal: React.FC<BookFormModalProps> = ({ isOpen, onClose, onSave, book }) => {
   const [formData, setFormData] = useState<Book>({ name: '', author: ''});
 
-  useEffect(() => {
-    console.log("this is book",book);
-    
+  useEffect(() => {    
     if (book) {
       setFormData(book);
     } else {
@@ -54,7 +52,6 @@ const BookFormModal: React.FC<BookFormModalProps> = ({ isOpen, onClose, onSave, 
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter book title"
-              required
             />
           </div>
           <div className="form-group">
@@ -65,7 +62,6 @@ const BookFormModal: React.FC<BookFormModalProps> = ({ isOpen, onClose, onSave, 
               value={formData.author}
               onChange={handleChange}
               placeholder="Enter author name"
-              required
             />
           </div>
           

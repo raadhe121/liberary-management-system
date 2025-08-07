@@ -11,7 +11,7 @@ dotenv.config()
 
 export const addBook = async (req, res) => {
     try {
-        const { name, author } = req.body
+        const { title, author } = req.body
         let validateMessage = validateRequiredFields(req.body)
         if (validateMessage) {
             return res.status(401).json({
@@ -20,17 +20,28 @@ export const addBook = async (req, res) => {
                 user: {},
             });
         } else {
-            const book = await Book.create({
-                name,
-                author,
-                status: 'active',
-                bookStatus: 'free'
-            })
-            return res.status(200).json({
-                status: 200,
-                message: "Book created Successfully.",
-                data: book,
-            });
+            const newBook = await Book.findAll({ where: { name: title, author: author } })
+            if (newBook.length > 0) {
+                return res.status(401).json({
+                    status: 401,
+                    message: "Book with same name and author already exists.",
+                    user: {},
+                });
+            } else {
+                const name = title
+                const book = await Book.create({
+                    name,
+                    author,
+                    status: 'active',
+                    bookStatus: 'free'
+                })
+                return res.status(200).json({
+                    status: 200,
+                    message: "Book created Successfully.",
+                    data: book,
+                });
+            }
+
         }
 
     }
@@ -47,7 +58,7 @@ export const addBook = async (req, res) => {
 
 export const updateBook = async (req, res) => {
     try {
-        const {id, name, author } = req.body
+        const { id, name, author } = req.body
         let validateMessage = validateRequiredFields(req.body)
         if (validateMessage) {
             return res.status(401).json({
@@ -59,8 +70,8 @@ export const updateBook = async (req, res) => {
             const book = await Book.update({
                 name,
                 author,
-               
-            },{
+
+            }, {
                 where: { id: id }
             })
             return res.status(200).json({
@@ -84,8 +95,8 @@ export const updateBook = async (req, res) => {
 
 export const deleteBook = async (req, res) => {
     try {
-        const {id} = req.body
-        
+        const { id } = req.body
+
         let validateMessage = validateRequiredFields(id)
         if (validateMessage) {
             return res.status(401).json({
@@ -241,12 +252,12 @@ export const retrunBook = async (req, res) => {
             });
         }
 
-       
+
         else {
             console.log("else");
 
             await UserBook.destroy({ where: { bookId: req.body.bookId } })
-            
+
             await Book.update({ bookStatus: 'free' },
                 {
                     where: { id: req.body.bookId }

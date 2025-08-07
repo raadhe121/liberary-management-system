@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "library-management",
+    "database": "library-management1",
     "host": "localhost",
     "dialect": "mysql"
   },

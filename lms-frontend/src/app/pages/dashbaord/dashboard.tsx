@@ -30,8 +30,8 @@ function Dashboard() {
     if (selectedStudent) {
       dispatch(updateStudent(studentData)).then(() => dispatch(getAllStudents()));
     } else {
-      console.log("thisi as",studentData);
-      
+      console.log("thisi as", studentData);
+
       dispatch(addStudent(studentData)).then(() => dispatch(getAllStudents()));
     }
     dispatch(getAllStudents());
@@ -80,9 +80,15 @@ function Dashboard() {
         dispatch(getAllIssuedBookList());
       });
     } else {
-      dispatch(addBook(bookData)).then(() => {
-        dispatch(getAllBookList());
-      });
+      dispatch(addBook(bookData))
+        .unwrap()
+        .then(() => {
+          dispatch(getAllBookList());
+          setIsModalOpen(false); // close the modal
+        })
+        .catch((error) => {
+          console.error("Error adding book:", error);
+        });
     }
   };
   const handleAddClick = () => {
@@ -287,7 +293,7 @@ function Dashboard() {
 
         {currentTab === 'profile' && (
           <>
-          <ProfileScreen/>
+            <ProfileScreen />
           </>
         )}
       </main>

@@ -107,6 +107,8 @@ interface Book {
   id: number;
   name: string;
   author: string;
+  issuedFrom:string;
+  issuedTo:string;
 }
 export const addBook = createAsyncThunk(
   'auth/addBook',
@@ -117,7 +119,7 @@ export const addBook = createAsyncThunk(
       const response = await axios.post(
         '/add-book',
         {
-          name: bookData.name,
+          title: bookData.name,
           author: bookData.author
         },
         {
@@ -138,15 +140,17 @@ export const addBook = createAsyncThunk(
       } else {
         swal(
           'Oops!',
-          response.data.message || 'An error occurred',
+          response.data.message || 'An error occurred9876543',
           'error'
         );
         throw new Error(response.data.message || 'Verification failed');
       }
     } catch (error: any) {
+      console.log(error);
+      
       swal(
         'Oops!',
-        error.response?.data?.message || 'An error occurred',
+        error.response?.data?.message || 'An error occurred1234567890',
         'error'
       );
       return thunkAPI.rejectWithValue(error.response?.data || error.message);

@@ -19,13 +19,15 @@ UserBook.init({
       model: 'Books',
       key: 'id'
     }
-  }
+  },
 }, {
   sequelize,
   modelName: 'UserBook',
+  tableName: 'UserBooks', // Optional, to match your migration table name
+  timestamps: true // Ensures createdAt and updatedAt are managed automatically
 });
 
-// Define associate as a property
+// Define associations
 UserBook.associate = function(models) {
   UserBook.belongsTo(models.User, { foreignKey: 'userId' });
   UserBook.belongsTo(models.Book, { foreignKey: 'bookId' });

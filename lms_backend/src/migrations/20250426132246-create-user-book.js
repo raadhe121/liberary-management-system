@@ -27,6 +27,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -36,10 +37,6 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-
-    // You might not need these separate addConstraint calls if defined above
-    // await queryInterface.addConstraint('UserBooks', { ... });
-    // await queryInterface.addConstraint('UserBooks', { ... });
   },
 
   down: async (queryInterface, Sequelize) => {
